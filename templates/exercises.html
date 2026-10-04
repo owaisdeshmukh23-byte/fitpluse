@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Exercise Library & Form Guides | FitPulse{% endblock %}
+{% block meta_description %}Comprehensive exercise technique database. Step-by-step biomechanics instructions, safety cues, and target muscle breakdowns.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 6rem;">
+    <!-- Page Header -->
+    <div class="section-header">
+        <span class="badge badge-cyan">Technique & Biomechanics</span>
+        <h1 style="font-size: 2.75rem; margin-top: 0.5rem;">Exercise Library</h1>
+        <p class="section-subtitle">
+            Master proper lifting form, eliminate injury risk, and optimize mechanical tension.
+        </p>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="filter-bar">
+        <!-- Muscle Filter -->
+        <div class="filter-group">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Muscle:</span>
+            <a href="{{ url_for('exercises', muscle='', equipment=selected_equipment, search=search_query) }}" 
+               class="filter-pill {% if not selected_muscle or selected_muscle == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('exercises', muscle='Chest', equipment=selected_equipment, search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Chest' %}active{% endif %}">Chest</a>
+            <a href="{{ url_for('exercises', muscle='Back', equipment=selected_equipment, search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Back' %}active{% endif %}">Back</a>
+            <a href="{{ url_for('exercises', muscle='Legs', equipment=selected_equipment, search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Legs' %}active{% endif %}">Legs</a>
+            <a href="{{ url_for('exercises', muscle='Shoulders', equipment=selected_equipment, search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Shoulders' %}active{% endif %}">Shoulders</a>
+            <a href="{{ url_for('exercises', muscle='Core', equipment=selected_equipment, search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Core' %}active{% endif %}">Core</a>
+        </div>
+
+        <!-- Equipment Filter -->
+        <div class="filter-group">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Equipment:</span>
+            <a href="{{ url_for('exercises', muscle=selected_muscle, equipment='', search=search_query) }}" 
+               class="filter-pill {% if not selected_equipment or selected_equipment == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('exercises', muscle=selected_muscle, equipment='Barbell', search=search_query) }}" 
+               class="filter-pill {% if selected_equipment == 'Barbell' %}active{% endif %}">Barbell</a>
+            <a href="{{ url_for('exercises', muscle=selected_muscle, equipment='Dumbbells', search=search_query) }}" 
+               class="filter-pill {% if selected_equipment == 'Dumbbells' %}active{% endif %}">Dumbbells</a>
+            <a href="{{ url_for('exercises', muscle=selected_muscle, equipment='Bodyweight', search=search_query) }}" 
+               class="filter-pill {% if selected_equipment == 'Bodyweight' %}active{% endif %}">Bodyweight</a>
+            <a href="{{ url_for('exercises', muscle=selected_muscle, equipment='Kettlebell', search=search_query) }}" 
+               class="filter-pill {% if selected_equipment == 'Kettlebell' %}active{% endif %}">Kettlebell</a>
+        </div>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ url_for('exercises') }}" class="search-box">
+            {% if selected_muscle %}<input type="hidden" name="muscle" value="{{ selected_muscle }}">{% endif %}
+            {% if selected_equipment %}<input type="hidden" name="equipment" value="{{ selected_equipment }}">{% endif %}
+            <span class="search-icon">&#128269;</span>
+            <input type="text" name="search" placeholder="Search exercises..." value="{{ search_query }}">
+        </form>
+    </div>
+
+    <!-- Active Filters Summary (if any) -->
+    {% if selected_muscle or selected_equipment or search_query %}
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Active Filters:</span>
+        {% if selected_muscle %}
+            <span class="badge badge-cyan">{{ selected_muscle }}</span>
+        {% endif %}
+        {% if selected_equipment %}
+            <span class="badge badge-lime">{{ selected_equipment }}</span>
+        {% endif %}
+        {% if search_query %}
+            <span class="badge badge-gray">Keyword: "{{ search_query }}"</span>
+        {% endif %}
+        <a href="{{ url_for('exercises') }}" style="font-size: 0.8rem; color: var(--accent-coral); text-decoration: underline; margin-left: 0.5rem;">
+            Clear All
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Exercises Grid -->
+    {% if exercises %}
+    <div class="grid-3">
+        {% for ex in exercises %}
+        <article class="card">
+            <div class="card-img-wrapper" style="height: 200px;">
+                <img src="{{ ex.image_url }}" alt="{{ ex.name }}" loading="lazy">
+                <span class="badge badge-cyan card-badge-top">{{ ex.target_muscle }}</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span>&#9874; {{ ex.equipment }}</span>
+                    <span>&#8226;</span>
+                    <span class="text-lime">{{ ex.difficulty }}</span>
+                </div>
+                <h2 class="card-title" style="font-size: 1.2rem;">{{ ex.name }}</h2>
+                <p class="card-desc">{{ ex.description }}</p>
+                <div class="card-footer">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">{{ ex.equipment }}</span>
+                    <a href="{{ url_for('exercise_detail', slug=ex.slug) }}" class="btn btn-secondary btn-sm">
+                        View Form Guide &#8594;
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#129300;</div>
+        <h3>No Exercises Found</h3>
+        <p style="color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
+            No exercises match your current search parameters.
+        </p>
+        <a href="{{ url_for('exercises') }}" class="btn btn-primary">Reset Filters</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

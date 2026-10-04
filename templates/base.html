@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FitPulse - Modern Fitness & Hypertrophy Platform{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block meta_description %}Elevate your strength and athleticism with FitPulse. Modern workout routines, exercise technique library, smart BMI calculator, and science-backed nutrition guides.{% endblock %}">
+    <meta name="keywords" content="fitness, workout routines, exercise library, gym, hypertrophy, bodybuilding, BMI calculator, healthy recipes, macro guide, Gen-Z fitness">
+    <meta name="author" content="FitPulse College Project">
+    
+    <!-- Open Graph / Social SEO -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% block og_title %}FitPulse - Modern Fitness Platform{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Modern workout routines, exercise technique library, smart BMI calculator, and science-backed nutrition.{% endblock %}">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="navbar">
+        <div class="container nav-wrapper">
+            <a href="{{ url_for('home') }}" class="brand-logo" title="FitPulse Home">
+                <span class="pulse-dot"></span>
+                <span>Fit<span class="text-lime">Pulse</span></span>
+            </a>
+
+            <!-- Mobile Menu Hamburger -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                &#9776;
+            </button>
+
+            <!-- Navigation Links -->
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{{ url_for('home') }}" class="nav-link {% if active_path == '/' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('workouts') }}" class="nav-link {% if '/workouts' in active_path %}active{% endif %}">Workouts</a></li>
+                    <li><a href="{{ url_for('exercises') }}" class="nav-link {% if '/exercises' in active_path %}active{% endif %}">Exercises</a></li>
+                    <li><a href="{{ url_for('nutrition') }}" class="nav-link {% if '/nutrition' in active_path %}active{% endif %}">Nutrition</a></li>
+                    <li><a href="{{ url_for('bmi_calculator') }}" class="nav-link {% if '/bmi' in active_path %}active{% endif %}">BMI Calc</a></li>
+                    <li><a href="{{ url_for('blog') }}" class="nav-link {% if '/blog' in active_path %}active{% endif %}">Blog</a></li>
+                    <li><a href="{{ url_for('about') }}" class="nav-link {% if '/about' in active_path %}active{% endif %}">About</a></li>
+                </ul>
+            </nav>
+
+            <!-- Auth Actions -->
+            <div class="nav-actions">
+                {% if current_user %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-sm" title="View Dashboard">
+                        Dashboard
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-lime btn-sm" title="Log Out">
+                        Log Out
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm">Log In</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Alert Messages -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button type="button" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.1rem;" onclick="this.parentElement.remove();">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Page Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="{{ url_for('home') }}" class="brand-logo" style="margin-bottom: 1rem; display: inline-flex;">
+                        <span class="pulse-dot"></span>
+                        <span>Fit<span class="text-lime">Pulse</span></span>
+                    </a>
+                    <p class="footer-desc">
+                        A modern, science-based fitness ecosystem designed for high performance, progressive hypertrophy, and optimal wellness.
+                    </p>
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                        <span class="badge badge-lime">Python Flask</span>
+                        <span class="badge badge-cyan">PostgreSQL</span>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Navigation</h5>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('workouts') }}">Workout Routines</a></li>
+                        <li><a href="{{ url_for('exercises') }}">Exercise Library</a></li>
+                        <li><a href="{{ url_for('nutrition') }}">Macro Recipes</a></li>
+                        <li><a href="{{ url_for('bmi_calculator') }}">Smart BMI Calculator</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Platform</h5>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('blog') }}">Fitness Journal</a></li>
+                        <li><a href="{{ url_for('about') }}">About Project</a></li>
+                        <li><a href="{{ url_for('register') }}">Join PulseFit</a></li>
+                        <li><a href="{{ url_for('login') }}">Member Portal</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>College Project</h5>
+                    <p class="footer-desc" style="font-size: 0.85rem;">
+                        Engineered with Flask, PostgreSQL ORM, and clean modern responsive frontend architecture.
+                    </p>
+                    <p style="font-size: 0.8rem; color: var(--accent-lime); margin-top: 0.5rem; font-weight: 600;">
+                        Ready for Render Deployment
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitPulse. Built for College Academic Project.</p>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="{{ url_for('sitemap') }}" style="color: var(--text-dim);">Sitemap</a>
+                    <a href="{{ url_for('robots') }}" style="color: var(--text-dim);">Robots.txt</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/favorites.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

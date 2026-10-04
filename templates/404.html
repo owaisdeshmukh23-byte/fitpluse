@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}404 - Page Not Found | FitPulse{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 6rem 1.5rem; text-align: center;">
+    <div style="max-width: 540px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 3.5rem 2rem;">
+        <span class="badge badge-coral" style="margin-bottom: 1rem;">404 Error</span>
+        <h1 style="font-size: 3.5rem; color: var(--accent-lime); margin-bottom: 0.5rem; line-height: 1;">404</h1>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Out of Bounds</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+            {{ error_message or "The workout, guide, or article you are looking for does not exist or may have been relocated." }}
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('home') }}" class="btn btn-primary">Return Home</a>
+            <a href="{{ url_for('workouts') }}" class="btn btn-secondary">Explore Workouts</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}About FitPulse | College Viva Project{% endblock %}
+{% block meta_description %}Learn about FitPulse: a full-stack fitness web application built with Python Flask, PostgreSQL ORM, and modern responsive frontend.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 6rem;">
+    <!-- Page Header -->
+    <div class="section-header text-center" style="max-width: 720px; margin-left: auto; margin-right: auto;">
+        <span class="badge badge-lime">Academic Project & Platform</span>
+        <h1 style="font-size: 2.75rem; margin-top: 0.5rem;">About FitPulse</h1>
+        <p class="section-subtitle">
+            An engineering project bridging sports science and modern web architecture.
+        </p>
+    </div>
+
+    <!-- Mission & Overview Split -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; margin-bottom: 5rem;">
+        <div>
+            <span class="badge badge-cyan" style="margin-bottom: 0.75rem;">Our Mission</span>
+            <h2 style="font-size: 2.2rem; margin-bottom: 1.25rem;">Democratizing Intelligent Training</h2>
+            <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                FitPulse was designed from the ground up to solve the clutter and misinformation prevalent in modern fitness culture. Instead of endless subscriptions and convoluted workout routines, we provide evidence-based hypertrophy splits, clear exercise biomechanics, and personalized health metrics.
+            </p>
+            <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8;">
+                Built as a comprehensive college capstone project, this platform demonstrates full-stack software development principles: secure authentication, relational database modeling, responsive mobile design, and cloud readiness.
+            </p>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-md);">
+            <h3 style="font-size: 1.35rem; margin-bottom: 1.5rem; color: var(--accent-lime);">&#128736; Technology Stack</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                    <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(204, 255, 0, 0.12); color: var(--accent-lime); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">
+                        Py
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--text-main);">Python Flask 3.x</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Lightweight, WSGI-compliant microframework handling modular routing and controller logic.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                    <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(0, 240, 255, 0.12); color: var(--accent-cyan); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">
+                        Pg
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--text-main);">PostgreSQL &amp; SQLAlchemy ORM</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Enterprise relational database with psycopg2 driver, normalized relational schema, and foreign key cascades.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                    <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255, 71, 87, 0.12); color: var(--accent-coral); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">
+                        UI
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--text-main);">Semantic HTML5, Modern CSS &amp; Vanilla JS</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Gen-Z dark obsidian aesthetic, responsive CSS Grid/Flexbox, asynchronous AJAX favorites without framework bloat.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                    <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(139, 92, 246, 0.12); color: var(--accent-purple); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">
+                        Rd
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--text-main);">Render Cloud Deployment</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Production ready with Gunicorn WSGI server, DATABASE_URL auto-normalization, and Procfile configuration.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- College Viva Defense Guide -->
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 3rem; margin-bottom: 5rem;">
+        <div style="text-align: center; max-width: 680px; margin: 0 auto 2.5rem;">
+            <span class="badge badge-lime">Viva Defense Preparation</span>
+            <h2 style="font-size: 2rem; margin-top: 0.5rem;">Key Architecture Concepts to Explain</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Clear explanations for examiners and professors reviewing this project.
+            </p>
+        </div>
+
+        <div class="grid-2">
+            <div style="background: var(--bg-surface); padding: 1.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <h4 style="font-size: 1.15rem; color: var(--accent-lime); margin-bottom: 0.5rem;">
+                    1. MVC Architectural Pattern
+                </h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                    <strong>Models</strong> (<code>models.py</code>): Encapsulate the PostgreSQL schema and relationships.<br>
+                    <strong>Views</strong> (<code>templates/*.html</code>): Jinja2 templates for dynamic semantic presentation.<br>
+                    <strong>Controllers</strong> (<code>app.py</code>): Route handlers processing incoming HTTP requests and dispatching data.
+                </p>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 1.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <h4 style="font-size: 1.15rem; color: var(--accent-cyan); margin-bottom: 0.5rem;">
+                    2. Security &amp; Password Hashing
+                </h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                    Passwords are never stored in plaintext. Werkzeug's <code>generate_password_hash</code> implements industry standard cryptographic PBKDF2/scrypt salt-and-hash routines. Protected routes use session-based authentication with custom <code>@login_required</code> guards.
+                </p>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 1.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <h4 style="font-size: 1.15rem; color: var(--accent-coral); margin-bottom: 0.5rem;">
+                    3. SQL Injection Prevention
+                </h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                    By using SQLAlchemy ORM queries (such as <code>Workout.query.filter()</code>), all search inputs and route parameters are automatically bound as parameterized variables by the DB-API driver, neutralizing SQL injection vectors.
+                </p>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 1.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <h4 style="font-size: 1.15rem; color: var(--accent-purple); margin-bottom: 0.5rem;">
+                    4. Asynchronous AJAX Favorites
+                </h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                    The favorite/bookmark feature uses JavaScript <code>fetch()</code> API to interact with <code>/api/favorites/toggle/&lt;id&gt;</code> asynchronously, updating the database record and toggling the UI heart icon without triggering an expensive full page reload.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ exercise.name }} Technique & Form Guide | FitPulse{% endblock %}
+{% block meta_description %}Learn pristine biomechanical execution for {{ exercise.name }}. Form checkpoints, setup instructions, and safety cues.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2.5rem 1.5rem 6rem;">
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{{ url_for('exercises') }}" class="text-lime" style="font-size: 0.875rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+            &#8592; Back to Exercise Library
+        </a>
+    </div>
+
+    <!-- Main Detail Grid -->
+    <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 3rem; align-items: flex-start; margin-bottom: 3.5rem;">
+        <div>
+            <div style="display: flex; gap: 0.6rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+                <span class="badge badge-cyan">{{ exercise.target_muscle }}</span>
+                <span class="badge badge-lime">{{ exercise.equipment }}</span>
+                <span class="badge badge-gray">{{ exercise.difficulty }}</span>
+            </div>
+
+            <h1 style="font-size: clamp(2rem, 3.5vw, 3rem); margin-bottom: 1rem;">
+                {{ exercise.name }}
+            </h1>
+
+            <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">
+                {{ exercise.description }}
+            </p>
+
+            <!-- Instructions Section -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.35rem; margin-bottom: 1rem; color: var(--text-main);">
+                    Step-by-Step Execution
+                </h2>
+                <div style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; white-space: pre-line;">
+                    {{ exercise.instructions }}
+                </div>
+            </div>
+
+            <!-- Form Cues Box -->
+            {% if exercise.form_tips %}
+            <div style="background: var(--bg-card); border: 1px solid rgba(204, 255, 0, 0.3); border-radius: var(--radius-lg); padding: 1.75rem;">
+                <h3 style="font-size: 1.15rem; color: var(--accent-lime); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>&#9889;</span> Biomechanical Form Checkpoints
+                </h3>
+                <p style="font-size: 0.925rem; color: var(--text-main); line-height: 1.7;">
+                    {{ exercise.form_tips }}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Visual Side -->
+        <div>
+            <div style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-md); margin-bottom: 1.5rem;">
+                <img src="{{ exercise.image_url }}" alt="{{ exercise.name }}" style="width: 100%; height: 380px; object-fit: cover;">
+            </div>
+
+            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center;">
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Looking for Routines?</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Find structured workout routines that feature {{ exercise.name }}.
+                </p>
+                <a href="{{ url_for('workouts', search=exercise.name) }}" class="btn btn-primary btn-sm" style="width: 100%;">
+                    Find Workouts With This Exercise
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

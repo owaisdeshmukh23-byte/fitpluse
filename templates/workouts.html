@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Workout Routines | FitPulse{% endblock %}
+{% block meta_description %}Explore our curated workout routines for hypertrophy, strength, and fat loss. Filter by difficulty, muscle group, and session duration.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 6rem;">
+    <!-- Page Header -->
+    <div class="section-header">
+        <span class="badge badge-lime">Training Splits</span>
+        <h1 style="font-size: 2.75rem; margin-top: 0.5rem;">Workout Routines</h1>
+        <p class="section-subtitle">
+            Curated training sessions calibrated for hypertrophy, metabolic burn, and athletic strength.
+        </p>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="filter-bar">
+        <!-- Difficulty Filter -->
+        <div class="filter-group">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Difficulty:</span>
+            <a href="{{ url_for('workouts', difficulty='', muscle=selected_muscle, search=search_query) }}" 
+               class="filter-pill {% if not selected_difficulty or selected_difficulty == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('workouts', difficulty='Beginner', muscle=selected_muscle, search=search_query) }}" 
+               class="filter-pill {% if selected_difficulty == 'Beginner' %}active{% endif %}">Beginner</a>
+            <a href="{{ url_for('workouts', difficulty='Intermediate', muscle=selected_muscle, search=search_query) }}" 
+               class="filter-pill {% if selected_difficulty == 'Intermediate' %}active{% endif %}">Intermediate</a>
+            <a href="{{ url_for('workouts', difficulty='Advanced', muscle=selected_muscle, search=search_query) }}" 
+               class="filter-pill {% if selected_difficulty == 'Advanced' %}active{% endif %}">Advanced</a>
+        </div>
+
+        <!-- Muscle Filter -->
+        <div class="filter-group">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Muscle:</span>
+            <a href="{{ url_for('workouts', difficulty=selected_difficulty, muscle='', search=search_query) }}" 
+               class="filter-pill {% if not selected_muscle or selected_muscle == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('workouts', difficulty=selected_difficulty, muscle='Full Body', search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Full Body' %}active{% endif %}">Full Body</a>
+            <a href="{{ url_for('workouts', difficulty=selected_difficulty, muscle='Chest', search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Chest' %}active{% endif %}">Chest</a>
+            <a href="{{ url_for('workouts', difficulty=selected_difficulty, muscle='Legs', search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Legs' %}active{% endif %}">Legs</a>
+            <a href="{{ url_for('workouts', difficulty=selected_difficulty, muscle='Back', search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Back' %}active{% endif %}">Back</a>
+            <a href="{{ url_for('workouts', difficulty=selected_difficulty, muscle='Core', search=search_query) }}" 
+               class="filter-pill {% if selected_muscle == 'Core' %}active{% endif %}">Core</a>
+        </div>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ url_for('workouts') }}" class="search-box">
+            {% if selected_difficulty %}<input type="hidden" name="difficulty" value="{{ selected_difficulty }}">{% endif %}
+            {% if selected_muscle %}<input type="hidden" name="muscle" value="{{ selected_muscle }}">{% endif %}
+            <span class="search-icon">&#128269;</span>
+            <input type="text" name="search" placeholder="Search routines..." value="{{ search_query }}">
+        </form>
+    </div>
+
+    <!-- Active Filters Summary (if any) -->
+    {% if selected_difficulty or selected_muscle or search_query %}
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Active Filters:</span>
+        {% if selected_difficulty %}
+            <span class="badge badge-lime">{{ selected_difficulty }}</span>
+        {% endif %}
+        {% if selected_muscle %}
+            <span class="badge badge-cyan">{{ selected_muscle }}</span>
+        {% endif %}
+        {% if search_query %}
+            <span class="badge badge-gray">Keyword: "{{ search_query }}"</span>
+        {% endif %}
+        <a href="{{ url_for('workouts') }}" style="font-size: 0.8rem; color: var(--accent-coral); text-decoration: underline; margin-left: 0.5rem;">
+            Clear All
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Workouts Grid -->
+    {% if workouts %}
+    <div class="grid-3">
+        {% for workout in workouts %}
+        <article class="card">
+            <div class="card-img-wrapper">
+                <img src="{{ workout.image_url }}" alt="{{ workout.title }}" loading="lazy">
+                
+                {% if workout.difficulty == 'Beginner' %}
+                    <span class="badge badge-cyan card-badge-top">Beginner</span>
+                {% elif workout.difficulty == 'Intermediate' %}
+                    <span class="badge badge-lime card-badge-top">Intermediate</span>
+                {% else %}
+                    <span class="badge badge-coral card-badge-top">Advanced</span>
+                {% endif %}
+                
+                <button class="card-fav-btn {% if workout.id in user_favorites_ids %}active{% endif %}" 
+                        data-workout-id="{{ workout.id }}" 
+                        aria-label="Save workout to dashboard">
+                    <span class="fav-icon">{% if workout.id in user_favorites_ids %}&#9829;{% else %}&#9825;{% endif %}</span>
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span>&#9201; {{ workout.duration_minutes }} mins</span>
+                    <span>&#8226;</span>
+                    <span>&#128293; {{ workout.calories_burned }} kcal</span>
+                    <span>&#8226;</span>
+                    <span class="text-lime">{{ workout.target_muscle }}</span>
+                </div>
+                <h2 class="card-title" style="font-size: 1.25rem;">{{ workout.title }}</h2>
+                <p class="card-desc">{{ workout.description }}</p>
+                <div class="card-footer">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">{{ workout.target_muscle }}</span>
+                    <a href="{{ url_for('workout_detail', slug=workout.slug) }}" class="btn btn-secondary btn-sm">
+                        View Routine &#8594;
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div style="text-align: center; padding: 4rem 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#127947;</div>
+        <h3>No Workouts Found</h3>
+        <p style="color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
+            No workouts match your current filter criteria. Try resetting your search filters.
+        </p>
+        <a href="{{ url_for('workouts') }}" class="btn btn-primary">Reset Filters</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

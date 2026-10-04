@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Smart BMI & Caloric Intake Calculator | FitPulse{% endblock %}
+{% block meta_description %}Calculate your exact Body Mass Index (BMI), health classification, daily hydration target, and maintenance calories with our interactive tool.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 6rem;">
+    <!-- Page Header -->
+    <div class="section-header text-center">
+        <span class="badge badge-lime">Body Composition Metrics</span>
+        <h1 style="font-size: 2.75rem; margin-top: 0.5rem;">Smart BMI Calculator</h1>
+        <p class="section-subtitle">
+            Accurately assess your body mass index and discover your personalized caloric & hydration baselines.
+        </p>
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="bmi-container" style="margin-bottom: 4rem;">
+        <div class="bmi-grid">
+            <!-- Form Controls -->
+            <div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 1.25rem;">Enter Your Details</h2>
+
+                <div class="unit-toggle">
+                    <button type="button" class="unit-btn active" id="btnMetric">Metric (cm / kg)</button>
+                    <button type="button" class="unit-btn" id="btnImperial">Imperial (ft / lbs)</button>
+                </div>
+
+                <form id="bmiForm">
+                    <div id="metricInputs">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                            <div class="form-group">
+                                <label for="heightCm">Height (cm)</label>
+                                <input type="number" id="heightCm" class="form-control" placeholder="178" value="178" min="50" max="250" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="weightKg">Weight (kg)</label>
+                                <input type="number" id="weightKg" class="form-control" placeholder="74" value="74" min="20" max="300" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="imperialInputs" style="display: none;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label for="heightFt">Height (ft)</label>
+                                <input type="number" id="heightFt" class="form-control" placeholder="5" value="5" min="2" max="8">
+                            </div>
+                            <div class="form-group">
+                                <label for="heightIn">Height (in)</label>
+                                <input type="number" id="heightIn" class="form-control" placeholder="10" value="10" min="0" max="11">
+                            </div>
+                            <div class="form-group">
+                                <label for="weightLbs">Weight (lbs)</label>
+                                <input type="number" id="weightLbs" class="form-control" placeholder="165" value="165" min="40" max="600">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                        <div class="form-group">
+                            <label for="age">Age (years)</label>
+                            <input type="number" id="age" class="form-control" placeholder="21" value="21" min="14" max="90">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" class="form-control">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activityLevel">Activity Level</label>
+                        <select id="activityLevel" class="form-control">
+                            <option value="1.2">Sedentary (desk work, minimal gym)</option>
+                            <option value="1.375">Lightly Active (gym 1-3 days/week)</option>
+                            <option value="1.55" selected>Moderately Active (gym 3-5 days/week)</option>
+                            <option value="1.725">Very Active (hard training 6-7 days/week)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Dynamic Gauge Results -->
+            <div class="bmi-meter-box">
+                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Calculated BMI Score</span>
+                <div class="bmi-score-big" id="bmiScore">23.4</div>
+                <span class="badge badge-lime" id="bmiBadge" style="font-size: 0.85rem; padding: 0.4rem 1.25rem;">Normal Weight</span>
+
+                <div class="bmi-bar">
+                    <div class="bmi-bar-fill" id="bmiBarFill" style="width: 42%;"></div>
+                </div>
+
+                <div class="bmi-scale-labels">
+                    <span>&lt;18.5 Under</span>
+                    <span>18.5-24.9 Normal</span>
+                    <span>25-29.9 Over</span>
+                    <span>30+ Obese</span>
+                </div>
+
+                <p id="bmiAdvice" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1.5rem; line-height: 1.6;">
+                    Your weight is in the optimal healthy range. Continue with progressive resistance workouts and balanced nutrition.
+                </p>
+
+                <!-- Caloric & Hydration Projection -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                        <div style="font-size: 0.725rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Optimal Hydration</div>
+                        <div id="recWater" style="font-size: 1.3rem; font-weight: 800; color: var(--accent-cyan); margin-top: 0.25rem;">2.6 L / day</div>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                        <div style="font-size: 0.725rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Maintenance Calories</div>
+                        <div id="recCalories" style="font-size: 1.3rem; font-weight: 800; color: var(--accent-lime); margin-top: 0.25rem;">~2,220 kcal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Educational & Science Breakdown Table -->
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 2.5rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">World Health Organization (WHO) BMI Ranges</h3>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">
+                        <th style="padding: 0.75rem 1rem;">Category</th>
+                        <th style="padding: 0.75rem 1rem;">BMI Range (kg/m&sup2;)</th>
+                        <th style="padding: 0.75rem 1rem;">Health Risk Assessment</th>
+                        <th style="padding: 0.75rem 1rem;">Recommended Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--border-subtle);">
+                        <td style="padding: 1rem;"><span class="badge badge-cyan">Underweight</span></td>
+                        <td style="padding: 1rem; font-weight: 700;">&lt; 18.5</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Potential nutrient deficiency & low bone density</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Caloric surplus + hypertrophy strength training</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-subtle);">
+                        <td style="padding: 1rem;"><span class="badge badge-lime">Normal Weight</span></td>
+                        <td style="padding: 1rem; font-weight: 700; color: var(--accent-lime);">18.5 &ndash; 24.9</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Lowest statistical cardiovascular risk</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Maintain active lifestyle & progressive overload</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-subtle);">
+                        <td style="padding: 1rem;"><span class="badge badge-coral">Overweight</span></td>
+                        <td style="padding: 1rem; font-weight: 700; color: var(--accent-coral);">25.0 &ndash; 29.9</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Moderate risk of metabolic resistance</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Slight 300-500 kcal deficit + daily 8k-10k steps</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem;"><span class="badge badge-coral">Obesity Class</span></td>
+                        <td style="padding: 1rem; font-weight: 700; color: var(--accent-coral);">&ge; 30.0</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Elevated cardiovascular & joint strain</td>
+                        <td style="padding: 1rem; color: var(--text-muted);">Structured nutrition guidance & low impact cardio</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/bmi.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Athlete Dashboard | FitPulse{% endblock %}
+{% block meta_description %}Manage your saved workout routines, track physical targets, and review customized training sessions.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 6rem;">
+    <!-- Welcome Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+            <span class="badge badge-lime">Athlete Portal</span>
+            <h1 style="font-size: clamp(2rem, 3.5vw, 2.75rem); margin-top: 0.5rem;">
+                Welcome, {{ current_user.full_name if current_user.full_name else current_user.username }}!
+            </h1>
+            <p style="color: var(--text-muted); font-size: 1rem; margin-top: 0.25rem;">
+                Here are your saved workout splits and personalized fitness objectives.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{{ url_for('workouts') }}" class="btn btn-primary btn-sm">
+                + Browse New Workouts
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary btn-sm">
+                Log Out
+            </a>
+        </div>
+    </div>
+
+    <!-- User Profile Metric Strip -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.75rem;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Target Goal</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-lime); margin-top: 0.4rem;">
+                {{ current_user.fitness_goal or 'Build Muscle' }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Customized Training Split</div>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.75rem;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Experience Tier</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-cyan); margin-top: 0.4rem;">
+                {{ current_user.fitness_level or 'Intermediate' }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Calibrated Volume</div>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.75rem;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Saved Workouts</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin-top: 0.4rem;">
+                {{ favorite_workouts|length }} Routines
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">In Personal Library</div>
+        </div>
+    </div>
+
+    <!-- Saved Workouts Section -->
+    <div style="margin-bottom: 4rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+            <h2 style="font-size: 1.85rem;">Your Bookmarked Workouts</h2>
+            <span class="badge badge-gray">{{ favorite_workouts|length }} Saved</span>
+        </div>
+
+        {% if favorite_workouts %}
+        <div class="grid-3">
+            {% for workout in favorite_workouts %}
+            <article class="card dashboard-workout-card">
+                <div class="card-img-wrapper">
+                    <img src="{{ workout.image_url }}" alt="{{ workout.title }}" loading="lazy">
+                    <span class="badge badge-lime card-badge-top">{{ workout.difficulty }}</span>
+                    
+                    <button class="card-fav-btn active" 
+                            data-workout-id="{{ workout.id }}" 
+                            aria-label="Remove from favorites" 
+                            title="Remove from favorites">
+                        <span class="fav-icon">&#9829;</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span>&#9201; {{ workout.duration_minutes }} mins</span>
+                        <span>&#8226;</span>
+                        <span>&#128293; {{ workout.calories_burned }} kcal</span>
+                    </div>
+                    <h3 class="card-title">{{ workout.title }}</h3>
+                    <p class="card-desc">{{ workout.description }}</p>
+                    <div class="card-footer">
+                        <span class="text-lime" style="font-size: 0.85rem; font-weight: 700;">{{ workout.target_muscle }}</span>
+                        <a href="{{ url_for('workout_detail', slug=workout.slug) }}" class="btn btn-secondary btn-sm">
+                            Open Routine &#8594;
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 4rem 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">&#128278;</div>
+            <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem;">No Workouts Saved Yet</h3>
+            <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 1.5rem;">
+                Browse our curated training splits and tap the heart icon on any routine to save it directly to your dashboard.
+            </p>
+            <a href="{{ url_for('workouts') }}" class="btn btn-primary">
+                Browse Workout Library &#8594;
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Tool Shortcuts -->
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 2.5rem;">
+        <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem;">Athlete Quick Actions</h3>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="{{ url_for('bmi_calculator') }}" class="btn btn-secondary">
+                &#9889; Recalculate BMI &amp; Calories
+            </a>
+            <a href="{{ url_for('exercises') }}" class="btn btn-secondary">
+                &#128269; Explore Exercise Technique Guides
+            </a>
+            <a href="{{ url_for('nutrition') }}" class="btn btn-secondary">
+                &#129367; Browse High-Protein Meal Plans
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

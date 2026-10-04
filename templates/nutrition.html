@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}High-Protein Nutrition & Macro Recipes | FitPulse{% endblock %}
+{% block meta_description %}Fuel your muscle hypertrophy and fat loss goals. Delicious high-protein recipes with verified macro splits and meal prep steps.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1.5rem 6rem;">
+    <!-- Page Header -->
+    <div class="section-header">
+        <span class="badge badge-lime">Precision Fuel</span>
+        <h1 style="font-size: 2.75rem; margin-top: 0.5rem;">Nutrition & Recipes</h1>
+        <p class="section-subtitle">
+            Nutrient-dense recipes calibrated with precise macro breakdowns (protein, carbs, fats) for athletic recovery.
+        </p>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Category:</span>
+            <a href="{{ url_for('nutrition', category='', search=search_query) }}" 
+               class="filter-pill {% if not selected_category or selected_category == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('nutrition', category='High Protein', search=search_query) }}" 
+               class="filter-pill {% if selected_category == 'High Protein' %}active{% endif %}">High Protein</a>
+            <a href="{{ url_for('nutrition', category='Post-Workout', search=search_query) }}" 
+               class="filter-pill {% if selected_category == 'Post-Workout' %}active{% endif %}">Post-Workout</a>
+            <a href="{{ url_for('nutrition', category='Pre-Workout', search=search_query) }}" 
+               class="filter-pill {% if selected_category == 'Pre-Workout' %}active{% endif %}">Pre-Workout</a>
+            <a href="{{ url_for('nutrition', category='Plant-Based', search=search_query) }}" 
+               class="filter-pill {% if selected_category == 'Plant-Based' %}active{% endif %}">Plant-Based</a>
+        </div>
+
+        <form method="GET" action="{{ url_for('nutrition') }}" class="search-box">
+            {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+            <span class="search-icon">&#128269;</span>
+            <input type="text" name="search" placeholder="Search recipes or ingredients..." value="{{ search_query }}">
+        </form>
+    </div>
+
+    <!-- Recipes Grid -->
+    {% if recipes %}
+    <div class="grid-2">
+        {% for recipe in recipes %}
+        <article class="card" style="flex-direction: row; align-items: stretch;">
+            <div style="width: 40%; min-width: 180px; position: relative; overflow: hidden;">
+                <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                <span class="badge badge-lime card-badge-top" style="font-size: 0.7rem;">{{ recipe.category }}</span>
+            </div>
+            <div class="card-body" style="width: 60%; padding: 1.5rem;">
+                <div class="card-meta">
+                    <span>&#9201; {{ recipe.prep_time }} mins prep</span>
+                    <span>&#8226;</span>
+                    <span class="text-lime" style="font-weight: 700;">{{ recipe.calories }} kcal</span>
+                </div>
+                <h2 class="card-title" style="font-size: 1.25rem;">{{ recipe.title }}</h2>
+
+                <!-- Macros Pill Row -->
+                <div style="display: flex; gap: 0.5rem; margin: 0.75rem 0 1rem; flex-wrap: wrap;">
+                    <div style="background: rgba(204, 255, 0, 0.1); border: 1px solid rgba(204, 255, 0, 0.25); border-radius: var(--radius-sm); padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; color: var(--accent-lime);">
+                        P: {{ recipe.protein }}g
+                    </div>
+                    <div style="background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: var(--radius-sm); padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; color: var(--accent-cyan);">
+                        C: {{ recipe.carbs }}g
+                    </div>
+                    <div style="background: rgba(255, 71, 87, 0.1); border: 1px solid rgba(255, 71, 87, 0.25); border-radius: var(--radius-sm); padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; color: var(--accent-coral);">
+                        F: {{ recipe.fats }}g
+                    </div>
+                </div>
+
+                <div class="card-footer" style="padding-top: 0.75rem;">
+                    <a href="{{ url_for('nutrition_detail', slug=recipe.slug) }}" class="btn btn-secondary btn-sm" style="width: 100%;">
+                        View Recipe & Macros &#8594;
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">&#129377;</div>
+        <h3>No Recipes Found</h3>
+        <p style="color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
+            No recipes matched your search query. Try another category or keyword.
+        </p>
+        <a href="{{ url_for('nutrition') }}" class="btn btn-primary">Reset Filters</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
